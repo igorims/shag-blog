@@ -1,0 +1,25 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+    <title>{{ title }}</title>
+{% endblock title %}
+
+
+{% block body %}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'blog:index' %}">Главная</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Удалить пост</li>
+    </ol>
+</nav>
+
+
+<form method="POST">
+    {% csrf_token %}
+    <h2>Вы уверены, что хотите удалить пост "{{ post.title }}"?</h2>
+    <button class="btn btn-danger" type="submit">Да, удалить</button>
+    <a class="btn btn-outline-secondary" href="javascript:history.back()">Отменить</a>
+</form>
+
+{% endblock body %}

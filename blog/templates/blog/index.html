@@ -1,0 +1,114 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %}
+    <title>{{ title }}</title>
+{% endblock title %}
+
+{% block body %}
+
+    {# Навигация #}
+<div class="d-flex justify-content-between align-items-top pt-1">
+
+    <div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'blog:index' %}">Главная</a></li>
+                 {% for post in posts %}
+                    {% if forloop.first %}
+                        {% if 'category' in request.path %}
+                            <li class="breadcrumb-item active" aria-current="page"> {{ post.category }}</li>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </ol>
+        </nav>
+    </div>
+
+
+    <div>
+        {% if user.is_authenticated %}
+            <i class="material-icons" style="display: inline-flex;vertical-align: text-bottom;">person</i>
+            <a href="{% url 'blog:user_detail' user.pk %}">{{ request.user }}</a>
+            <strong class="mx-1">|</strong>
+            <a href="{% url 'blog:logout' %}">Выйти</a>
+        {% else %}
+            <a href="{% url 'blog:register' %}">Регистрация</a>
+            <strong class="mx-1">|</strong>
+            <a href="{% url 'blog:login' %}">Войти</a>
+        {% endif %}
+    </div>
+
+</div>
+<hr class="m-0 p-0">
+
+    {# Messages #}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div>Категории: </div>
+    <ul>
+        {% for cat in cats %}
+            <li><a href="{% url 'blog:category' cat.slug %}">{{ cat.name }}</a></li>
+        {% empty %}
+            <p>Нет ни одной категории</p>
+        {% endfor %}
+    </ul>
+
+
+    {% if is_authenticated %}
+        <a class="btn btn-outline-secondary my-2" href="{% url 'blog:create' %}">Создать пост</a>
+    {% endif %}
+
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for post in posts %}
+
+            {# https://micku7zu.github.io/vanilla-tilt.js/ #}
+            <div class="col" data-tilt
+                 data-tilt-reverse="true"
+                 data-tilt-max="10" {#  max tilt rotation (degrees), default: 35 #}
+                 data-tilt-speed="700"  {#  Speed of the enter/exit transition, default: 300 #}
+                 data-tilt-perspective="1000" {#  transform perspective, the lower the more extreme the tilt gets, default: 1000 #}
+                 data-tilt-scale="1.05"
+            >
+                <div class="card h-100 task_div" style="background: linear-gradient(#fff, lightgray); cursor:default;">
+                    {% if post.image %}
+                        <img src="{{ post.image.url }}" alt="image">
+                    {% endif %}
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div></div>
+                            <div><h5 class="card-title">{{ post.author }}. {{ post.title }}</h5></div>
+                            <div><a class="btn btn-close" href="{% url 'blog:post_delete' post.pk %}"></a></div>
+                        </div>
+                        <p class="card-text">{{ post.content|truncatewords:'15' }}</p>
+                        <p class="card-text text-muted">
+                            Статус: {{ post.is_published|yesno:'Опубликован, Не опубликован' }}</p>
+                        <p class="card-text text-muted">Категория: <a class="link-secondary"
+                                                                      href="{% url 'blog:category' post.category.slug %}">{{ post.category }}</a>
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between">
+                            <small class="text-muted">{{ post.publish_date|timesince }} назад</small>
+                            <small><a class="text-decoration-none link-secondary"
+                                      href="{% url 'blog:post_detail' post.slug %}">Читать пост --></a></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="alert alert-danger w-100" role="alert">
+                Нет ни одного поста!
+            </div>
+        {% endfor %}
+    </div>
+    <script type="text/javascript" src="{% static 'blog/js/vanilla-tilt.js' %}"></script>
+{% endblock %}

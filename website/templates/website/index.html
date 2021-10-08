@@ -1,0 +1,232 @@
+{% extends 'website/base.html' %}
+
+{% block title %}
+<title>Главная</title>
+{% endblock %}
+
+{% block body %}
+
+
+<main>
+    <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+        {% for product in products %}
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                    <div class="d-flex justify-content-between">
+                        <div></div>
+                        <h4 class="my-0 fw-normal" id="header-{{ product.id }}">{{ product.name }}</h4>
+<!--                        <a href="/delete/{{ product.id }}"><button type="button" class="btn-close" id="closeButton" aria-label="Close"></button></a>-->
+                        <button type="button" class="btn-close button-card" id="closeButton" value="{{ product.id }}" aria-label="Close" data-bs-toggle="modal" data-bs-target="#exampleModal"></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h1 class="card-title pricing-card-title">{{ product.price }}<small
+                            class="text-muted fw-light">руб.</small>
+                    </h1>
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li>{{ product.description }}</li>
+                    </ul>
+                    <a href="{% url 'buy' product.pk %}">
+                        <button type="button" class="w-100 btn btn-lg btn-outline-primary">Купить!</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+            <p>Данных нет</p>
+        {% endfor %}
+    </div>
+
+    {% for el in collection %}
+        {% if forloop.last %}
+            <h1>{{ el }} {{ forloop.revcounter }}</h1>
+        {% else %}
+            <p>{{ el }} {{ forloop.revcounter }}</p>
+        {% endif %}
+        <p>Случайный элемент {{ collection|random }}</p>
+
+    {% endfor %}
+
+    <p>{{ string1|default:'Новая надпись о том, что строки нет' }}</p>
+
+    <hr>
+    {% if collection|length_is:'6' %}
+        <p>Длина списка: {{ collection|length }}</p>
+    {% endif %}
+
+{#    Filters #}
+    <h3>Filters:</h3>
+    <p><strong>join:</strong> {{ collection|join:' // '}}</p>
+    <p><strong>add:</strong> {{ string|add:'12345' }}</p>
+    <p><strong>lower:</strong> {{ string|lower }}</p>
+    <p><strong>cut:</strong> {{ string|cut:'s' }}</p>
+    <p><strong>make_list:</strong> {{ string|make_list }}</p>
+    <p><strong>title:</strong> {{ string|title }}</p>
+    <p><strong>truncatechars:</strong> {{ string|truncatechars:'5' }}</p>
+    <p><strong>truncatewords:</strong> {{ string|truncatewords:'2' }}</p>
+    <p>{{ string2 }}</p>
+    <p><strong>urlize:</strong> {{ string2|urlize }}</p>
+    <p><strong>urlizetrunc:</strong> {{ string2|urlizetrunc:'5' }}</p>
+    <p><strong>wordcount:</strong> {{ string2|wordcount }}</p>
+    <p><strong>wordwrap:</strong> {{ string2|wordwrap:5 }}</p>
+    <p>{{ dct }}</p>
+
+    <p><strong>divisibleby: </strong>
+        {% if number|divisibleby:'3' %}
+            Делится
+        {% else %}
+            Не делится
+        {% endif %}
+    </p>
+    <p><strong>date: </strong>{{ date|date:'d-b-Y' }}</p>
+
+    <p><strong>Now:</strong> {% now "d m Y H:i" %}</p>
+
+<hr>
+    <p><strong>cycle inside forloop.counter: </strong></p>
+    {% for i in ''|ljust:"10" %}
+        <p style="color: {% cycle 'red' 'green' 'blue' %}">{{ forloop.counter }}</p>
+    {% endfor %}
+<hr>
+
+{% if dct %}
+    {{ dct }}
+{% elif number %}
+    {{ number }}
+{% elif date %}
+    {{ date }}
+{% else %}
+    Нет ничего
+{% endif %}
+
+<p><strong>firstof:</strong> {% firstof dct number date 'Нет ничего!' %}</p>
+
+<strong>lorem: </strong>{% lorem 2 p random %}
+
+
+<p><strong>with:</strong>
+    {% with col=collection|join:" // " %}
+        {{ string|add:col }}
+    {% endwith %}
+</p>
+
+
+<p><strong>autoescape:</strong>
+    {% autoescape off %}
+        {{ html }}
+    {% endautoescape %}
+</p>
+
+    {% include 'website/modal-delete.html' %}
+
+
+    <h2 class="display-6 text-center mb-4">Compare plans</h2>
+
+    <div class="table-responsive">
+        <table class="table text-center">
+            <thead>
+            <tr>
+                <th style="width: 34%;"></th>
+                <th style="width: 22%;">Free</th>
+                <th style="width: 22%;">Pro</th>
+                <th style="width: 22%;">Enterprise</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th scope="row" class="text-start">Public</th>
+                <td>
+                    <svg class="bi" width="24" height="24">
+                        <use xlink:href="#check"></use>
+                    </svg>
+                </td>
+                <td>
+                    <svg class="bi" width="24" height="24">
+                        <use xlink:href="#check"></use>
+                    </svg>
+                </td>
+                <td>
+                    <svg class="bi" width="24" height="24">
+                        <use xlink:href="#check"></use>
+                    </svg>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row" class="text-start">Private</th>
+                <td></td>
+                <td>
+                    <svg class="bi" width="24" height="24">
+                        <use xlink:href="#check"></use>
+                    </svg>
+                </td>
+                <td>
+                    <svg class="bi" width="24" height="24">
+                        <use xlink:href="#check"></use>
+                    </svg>
+                </td>
+            </tr>
+            </tbody>
+
+            <tbody>
+            <tr>
+                <th scope="row" class="text-start">Permissions</th>
+                <td>
+                    <svg class="bi" width="24" height="24">
+                        <use xlink:href="#check"></use>
+                    </svg>
+                </td>
+                <td>
+                    <svg class="bi" width="24" height="24">
+                        <use xlink:href="#check"></use>
+                    </svg>
+                </td>
+                <td>
+                    <svg class="bi" width="24" height="24">
+                        <use xlink:href="#check"></use>
+                    </svg>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row" class="text-start">Sharing</th>
+                <td></td>
+                <td>
+                    <svg class="bi" width="24" height="24">
+                        <use xlink:href="#check"></use>
+                    </svg>
+                </td>
+                <td>
+                    <svg class="bi" width="24" height="24">
+                        <use xlink:href="#check"></use>
+                    </svg>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row" class="text-start">Unlimited members</th>
+                <td></td>
+                <td>
+                    <svg class="bi" width="24" height="24">
+                        <use xlink:href="#check"></use>
+                    </svg>
+                </td>
+                <td>
+                    <svg class="bi" width="24" height="24">
+                        <use xlink:href="#check"></use>
+                    </svg>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row" class="text-start">Extra security</th>
+                <td></td>
+                <td></td>
+                <td>
+                    <svg class="bi" width="24" height="24">
+                        <use xlink:href="#check"></use>
+                    </svg>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+{% endblock %}

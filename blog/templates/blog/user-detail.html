@@ -1,0 +1,27 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+    <title>{{ title }}</title>
+{% endblock title %}
+
+
+{% block body %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'blog:index' %}">Главная</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ user }}</li>
+    </ol>
+</nav>
+
+<h4>Привет, меня зовут {{ user|capfirst }}. Это моя личная страничка.</h4>
+    Я очень люблю:
+    {% for category in categories %}
+        {% if forloop.last %}
+            а еще {{ category }}!
+        {% else %}
+            {{ category }},
+        {% endif %}
+    {% endfor %}
+
+
+{% endblock body %}

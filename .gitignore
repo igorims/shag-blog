@@ -1,0 +1,7 @@
+.django_start
+.idea
+datadump.json
+db.sqlite3
+.env
+Procfile
+runtime.txt

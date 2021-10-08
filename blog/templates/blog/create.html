@@ -1,0 +1,54 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+    <title>{{ title }}</title>
+{% endblock title %}
+
+{% block body %}
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'blog:index' %}">Главная</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Создать пост</li>
+        </ol>
+    </nav>
+
+
+    <h3>
+        Создать пост
+        <small class="text-muted">Хороший и подробный</small>
+    </h3>
+    <form method="POST" enctype="multipart/form-data" autocomplete="off">
+        {% csrf_token %}
+        <div class="form-floating mb-3">
+            {{ form.category }}
+        </div>
+        <div class="form-floating mb-3">
+            {{ form.author }}
+            <label for="floatingAuthor">Автор статьи</label>
+        </div>
+        <div class="form-floating mb-3">
+            {{ form.title }}
+            <label for="floatingTitle">Заголовок</label>
+            {{ form.errors }}
+        </div>
+        <div class="form-floating mb-3">
+            {{ form.content }}
+            <label for="floatingText">Текст</label>
+        </div>
+        <div class="form-floating mb-3">
+            {{ form.image }}
+        </div>
+        <div class="form-floating mb-3">
+            {{ form.slug }}
+            <label for="floatingSlug">URL (необязательно)</label>
+
+        </div>
+
+
+
+        <input type="submit" class="btn btn-outline-secondary" value="Опубликовать">
+    </form>
+
+
+{% endblock body %}

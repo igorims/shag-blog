@@ -1,0 +1,24 @@
+{% extends 'blog/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    <title>Логин</title>
+{% endblock title %}
+
+{% block body %}
+
+ <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'blog:index' %}">Главная</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Войти</li>
+        </ol>
+    </nav>
+
+
+ <form method="POST" autocomplete="off">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <input type="submit" class="btn btn-outline-secondary mt-2" value="Войти">
+    </form>
+
+{% endblock body %}

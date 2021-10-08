@@ -1,0 +1,32 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+    <title>{{ title }}</title>
+{% endblock title %}
+
+
+{% block body %}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'blog:index' %}">Главная</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ post.title }}</li>
+    </ol>
+</nav>
+
+<div class="card w-75">
+{% if post.image %}
+          <img src="{{ post.image.url }}" alt="image">
+      {% endif %}
+  <div class="card-header h3">
+      {{ post.title }}
+  </div>
+  <div class="card-body">
+    <h6 class="card-title d-inline">{{ post.author }}</h6> <small class="text-muted">{{ post.publish_date }}</small>
+      <hr class="w-25">
+
+    <p class="card-text">{{ post.content}}</p>
+  </div>
+</div>
+
+{% endblock body %}
